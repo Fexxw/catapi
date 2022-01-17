@@ -29,15 +29,15 @@ export class CatsService {
         return await this.catRepository.find({ where: {isReserved: false} } );
     }
 
-    async getById(id: number) {
+    async getById(id) {
         return await this.catRepository.findOne(id)
     }
 
-    async updatePost(id: number, catInterface: CatInterface) {
+    async updatePost(id, catInterface: CatInterface) {
         return await this.catRepository.update(id, catInterface)
     }
 
-    async deletePost(id: number){
+    async deletePost(id){
         return await this.catRepository.delete(id)
     }
 }
