@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import {Cat} from "./entities/cats.entity";
 import {CatInterface} from "./entities/cats.interface";
 import {InjectRepository} from "@nestjs/typeorm";
-
+import {Pagination} from "../pagination/paginate";
+import {PaginationOptionsInterface} from "../pagination/pagination.options.interface";
 
 @Injectable()
 export class CatsService {
@@ -13,8 +14,16 @@ export class CatsService {
         private catRepository: Repository<Cat>
     ){}
 
-    async getAll(){
-        return await this.catRepository.find();
+    async getAll( options: PaginationOptionsInterface ) {
+        const [results, total] = await this.catRepository.findAndCount({
+            take: options.limit,
+            skip: options.page * options.limit,
+        });
+
+        return new Pagination<Cat>({
+            results,
+            total,
+        });
     }
 
     async createCat(catInterface: CatInterface) {

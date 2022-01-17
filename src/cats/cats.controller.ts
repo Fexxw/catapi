@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from '@nestjs/common';
 import { CatsService } from './cats.service';
 import {CatInterface} from "./entities/cats.interface";
 
@@ -13,8 +13,14 @@ export class CatsController {
     }
 
     @Get()
-    getAll() {
-        return this.catsService.getAll()
+    async getAll(
+        @Query('limit') limit: number,
+        @Query('page') page: number
+    ){
+        return await this.catsService.getAll({
+            limit: limit || 10,
+            page: page || 0,
+        });
     }
 
     @Get('/reserved')
