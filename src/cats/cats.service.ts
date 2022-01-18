@@ -64,6 +64,10 @@ export class CatsService {
         return await this.catRepository.update(id, catInterface)
     }
 
+    async reservePost(id){
+        return await this.catRepository.update({id},{isReserved: true})
+    }
+
     async deletePost(id){
         return await this.catRepository.delete(id)
     }

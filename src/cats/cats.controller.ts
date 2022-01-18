@@ -49,6 +49,11 @@ export class CatsController {
         return this.catsService.updatePost(id, catInterface)
     }
 
+    @Put('/reserve/:id')
+    async reserve(@Param('id', ParseIntPipe) id: number){
+        return this.catsService.reservePost(id)
+    }
+
     @Delete('/search/:id')
     async delete(@Param('id', ParseIntPipe) id: number){
         return this.catsService.deletePost(id)
