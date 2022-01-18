@@ -17,10 +17,13 @@ export class Cat {
     color: string;
 
     @Column()
-    age: number
+    age: number;
 
     @Column()
-    price: number
+    price: number;
+
+    @Column()
+    photo: string;
 
     @Column({default: false})
     isReserved: boolean;

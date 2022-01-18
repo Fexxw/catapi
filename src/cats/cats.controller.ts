@@ -1,6 +1,6 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from '@nestjs/common';
+import {Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from '@nestjs/common';
 import { CatsService } from './cats.service';
-import {CatInterface} from "./entities/cats.interface";
+import {CatInterface} from "./entities/cats-interface";
 
 @Controller('/cats')
 export class CatsController {
@@ -8,38 +8,41 @@ export class CatsController {
     constructor(private catsService: CatsService) {}
 
     @Post()
-    create(@Body() catInterface: CatInterface) {
+    async create(@Body() catInterface: CatInterface) {
         return this.catsService.createCat(catInterface);
     }
 
     @Get()
     async getAll(
-        @Query('limit') limit: number,
-        @Query('page') page: number
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number
     ){
-        return await this.catsService.getAll({
-            limit: limit || 10,
-            page: page || 0,
-        });
+        return await this.catsService.getAll({ limit, page });
     }
 
     @Get('/reserved')
-    getReserved(){
-        return this.catsService.getReserved()
+    async getReserved(
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number
+    ){
+        return await this.catsService.getReserved({ limit, page });
     }
 
     @Get('/available')
-    getAvailable(){
-        return this.catsService.getAvailable()
+    async getAvailable(
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number
+    ){
+        return await this.catsService.getAvailable({ limit, page });
     }
 
     @Get('/search/:id')
-    getById(@Param('id', ParseIntPipe) id: number) {
+    async getById(@Param('id', ParseIntPipe) id: number) {
         return this.catsService.getById(id)
     }
 
     @Put('/search/:id')
-    update(
+    async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() catInterface: CatInterface
         ) {
@@ -47,7 +50,7 @@ export class CatsController {
     }
 
     @Delete('/search/:id')
-    delete(@Param('id', ParseIntPipe) id: number){
+    async delete(@Param('id', ParseIntPipe) id: number){
         return this.catsService.deletePost(id)
     }
 }

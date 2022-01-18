@@ -4,5 +4,6 @@ export interface CatInterface {
     breed?: string;
     age?: number;
     price?: number;
+    photo?: string;
     isReserved?: boolean;
 }

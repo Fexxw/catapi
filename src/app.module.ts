@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import {ConfigModule} from "@nestjs/config";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import { CatsModule } from './cats/cats.module';
-import {Cat} from "./cats/entities/cats.entity";
+import {Cat} from "./cats/entities/cats-entity";
 
 @Module({
     imports: [
