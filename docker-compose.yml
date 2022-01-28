@@ -6,10 +6,10 @@ services:
       build:
         context: .
       env_file:
-        .production.env
+        .env
+      working_dir: /api
       volumes:
-        - .:/api
-        - /api/node_modules
+        - ./:/api
       ports:
         - 5000:5000
         - 9229:9229
@@ -21,7 +21,7 @@ services:
       container_name: postgres
       image: postgres:12-alpine3.14
       env_file:
-        - .production.env
+        - .env
       environment:
         PG_DATA: /var/lib/postgresql/data
       ports:

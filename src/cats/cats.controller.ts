@@ -1,6 +1,21 @@
-import {Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    DefaultValuePipe,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    ParseUUIDPipe,
+    Post,
+    Put,
+    Query,
+    UploadedFile,
+    UseInterceptors
+} from '@nestjs/common';
 import { CatsService } from './cats.service';
-import {CatInterface} from "./entities/cats-interface";
+import {CatInterface} from "./cats-interface";
+import {FileInterceptor} from "@nestjs/platform-express";
 
 @Controller('/cats')
 export class CatsController {
@@ -36,26 +51,37 @@ export class CatsController {
         return await this.catsService.getAvailable({ limit, page });
     }
 
-    @Get('/search/:id')
-    async getById(@Param('id', ParseIntPipe) id: number) {
+    @Get(':uuid')
+    async getById(@Param('uuid', ParseUUIDPipe) id: string) {
         return this.catsService.getById(id)
     }
 
-    @Put('/search/:id')
+    @Put(':uuid')
     async update(
-        @Param('id', ParseIntPipe) id: number,
+        @Param('uuid', ParseUUIDPipe) id: string,
         @Body() catInterface: CatInterface
         ) {
         return this.catsService.updatePost(id, catInterface)
     }
 
-    @Put('/reserve/:id')
-    async reserve(@Param('id', ParseIntPipe) id: number){
+    @Put('/reserve/:uuid')
+    async reserve(@Param('uuid', ParseUUIDPipe) id: string){
         return this.catsService.reservePost(id)
     }
 
-    @Delete('/search/:id')
-    async delete(@Param('id', ParseIntPipe) id: number){
+    @Post('/photo-upload/:uuid')
+    @UseInterceptors(FileInterceptor('file'))
+    async addPhoto(@Param('uuid', ParseUUIDPipe) id: string, @UploadedFile() file: Express.Multer.File){
+        return this.catsService.addPhoto(id, file.buffer, file.originalname)
+    }
+
+    @Delete('/photo-delete/:uuid')
+    async deleteFile(@Param('uuid', ParseUUIDPipe) id: string){
+        return this.catsService.deletePhoto(id)
+    }
+
+    @Delete(':uuid')
+    async delete(@Param('uuid', ParseIntPipe) id: string){
         return this.catsService.deletePost(id)
     }
 }

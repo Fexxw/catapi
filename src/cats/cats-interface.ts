@@ -1,9 +1,8 @@
 export interface CatInterface {
-    id?: number;
+    id?: string;
     name?: string;
     breed?: string;
     age?: number;
     price?: number;
-    photo?: string;
     isReserved?: boolean;
 }
